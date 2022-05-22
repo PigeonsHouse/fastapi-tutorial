@@ -1,0 +1,43 @@
+<head>
+    <title>SNS</title>
+    <script>
+        token = localStorage.getItem('token')
+        if (token != null)
+            location.href = './home.html'
+
+        async function submit() {
+            const email = document.getElementById('input_email').value
+            const password = document.getElementById('input_pass').value
+            const response = await fetch('/api/users/signin', {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+                method: 'POST',
+                body: JSON.stringify({
+                    'email': email,
+                    'password': password
+                })
+            })
+            if (response.status != 200){
+                alert('signin is failed')
+                return
+            }
+            data = await response.json()
+            localStorage.setItem('token', data.token)
+            location.href = './home.html'
+        }
+    </script>
+</head>
+
+<center>
+<h1>サインイン</h1>
+
+email<br/>
+<input id="input_email" type="email" required/><br/>
+パスワード<br/>
+<input id="input_pass" type="password" required/><br/>
+<input type="button" value="サインイン" onclick="submit()"><br/>
+<br/>
+<a href="/">戻る</a>
+</center>
