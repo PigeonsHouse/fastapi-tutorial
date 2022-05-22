@@ -48,7 +48,7 @@ def get_user_by_id(db: Session, user_id: str) -> UserSchema:
     user = UserSchema.from_orm(user_orm)
     return user
 
-def get_contents(db: Session, user_id: str) -> List[ContentSchema]:
+def get_contents(db: Session) -> List[ContentSchema]:
     contents_orm = db.query(Content).order_by(desc(Content.created_at)).all()
     contents = list(map(ContentSchema.from_orm, contents_orm))
     if not contents:
