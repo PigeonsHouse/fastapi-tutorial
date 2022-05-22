@@ -1,11 +1,9 @@
 import os
-from typing import List
 import bcrypt
 from fastapi import HTTPException
-from sqlalchemy import desc
 from sqlalchemy.orm.session import Session
-from schemas import ContentSchema, UserSchema
-from db import Content, User
+from schemas import UserSchema
+from db import User
 
 salt = os.environ.get('PASSWORD_HASH_SALT', '$2a$10$ThXfVCPWwXYx69U8vuxSUu').encode()
 
@@ -47,23 +45,3 @@ def get_user_by_id(db: Session, user_id: str) -> UserSchema:
         raise HTTPException(status_code=404, detail='this user is not found')
     user = UserSchema.from_orm(user_orm)
     return user
-
-def get_contents(db: Session) -> List[ContentSchema]:
-    contents_orm = db.query(Content).order_by(desc(Content.created_at)).all()
-    contents = list(map(ContentSchema.from_orm, contents_orm))
-    if not contents:
-        raise HTTPException(status_code=404, detail='content is not found')
-    return contents
-
-def add_content(db: Session, content: str, user_id: str) -> ContentSchema:
-    content_orm = Content(
-        content=content,
-        user_id=user_id
-    )
-
-    db.add(content_orm)
-    db.commit()
-    db.refresh(content_orm)
-
-    content_data = ContentSchema.from_orm(content_orm)
-    return content_data

@@ -27,10 +27,8 @@ def get_my_info(user_id: str = Depends(get_current_user), db: Session = Depends(
 
 @content_router.get('', response_model=List[ContentSchema], dependencies=[Depends(get_current_user)])
 def fetch_contents(db: Session = Depends(get_db)):
-    contents = cruds.get_contents(db)
-    return contents
+    pass
 
 @content_router.post('', response_model=ContentSchema)
 def post_content(payload: ContentPayload, user_id: str = Depends(get_current_user), db: Session = Depends(get_db)):
-    content = cruds.add_content(db, payload.content, user_id)
-    return content
+    pass
