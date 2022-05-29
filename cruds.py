@@ -45,3 +45,11 @@ def get_user_by_id(db: Session, user_id: str) -> UserSchema:
         raise HTTPException(status_code=404, detail='this user is not found')
     user = UserSchema.from_orm(user_orm)
     return user
+
+# 作る関数1
+# DBからcontentsのテーブルにある情報全部持ってきて，返す用のschemaにフォーマットして，フォーマットしたものの配列を返す
+# fetch_contents関数で使用したい．
+
+# 作る関数2
+# Contentの作成に必要な情報を引数に受け取り，DBに追加して，追加した情報を更新した後にフォーマットして返す．
+# post_content関数で使用したい．
