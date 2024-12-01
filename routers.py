@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends
-from typing import List
 from utils import generate_token, get_current_user
 from db import get_db
 import cruds
@@ -25,10 +24,10 @@ def get_my_info(user_id: str = Depends(get_current_user), db: Session = Depends(
     user = cruds.get_user_by_id(db, user_id)
     return user
 
-@content_router.get('', response_model=List[ContentSchema], dependencies=[Depends(get_current_user)])
+@content_router.get('', response_model=list[ContentSchema], dependencies=[Depends(get_current_user)])
 def fetch_contents(db: Session = Depends(get_db)):
     # contentsの配列を取得して，配列をreturnする．
-    pass
+    return []
 
 @content_router.post('', response_model=ContentSchema)
 def post_content(payload: ContentPayload, user_id: str = Depends(get_current_user), db: Session = Depends(get_db)):
