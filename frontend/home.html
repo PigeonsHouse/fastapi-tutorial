@@ -1,88 +1,27 @@
+<!DOCTYPE html>
+<html lang="ja">
+
 <head>
-    <title>SNS</title>
-    <script>
-        let token = localStorage.getItem('token')
-        if (token == null)
-            location.href = '/'
-
-        function createContentStr(user_name, content, time) {
-            return '<div class="content"> <br/> <span><b>'+user_name+'</b></span> <p>'+content+'</p> <small>'+time+'</small> </div> <br/> <hr>'
-        }
-
-        async function submitContent() {
-            const content = document.getElementById('content').value
-            document.getElementById('content').value = ''
-            await fetch('/api/contents', {
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json;charset=utf-8',
-                    'Authorization': 'Bearer ' + token
-                },
-                method: 'POST',
-                body: JSON.stringify({
-                    'content': content
-                })
-            })
-            location.href = './home.html'
-        }
-
-        function logout() {
-            localStorage.removeItem('token')
-            location.href = '/'
-        }
-
-    </script>
-    <script type="module">
-        token = localStorage.getItem('token')
-        const response = await fetch('/api/users/me', {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json;charset=utf-8',
-                'Authorization': 'Bearer ' + token
-            }
-        })
-        if (response.status != 200){
-            alert('authentication is failed')
-            localStorage.removeItem('token')
-            location.href = '/'
-        } else {
-            const user = await response.json()
-            document.getElementById('display_name').innerHTML = 'ユーザー名：' + user.name
-
-            const timeline_response = await fetch('/api/contents', {
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json;charset=utf-8',
-                    'Authorization': 'Bearer ' + token
-                }
-            })
-            if (timeline_response.status == 404) {
-                const error = await timeline_response.json()
-                document.getElementById('timeline').insertAdjacentHTML('beforeend', '<p>'+error.detail+'</p>')
-            }
-            else if (timeline_response.status != 200){
-                alert('getting content is failed')
-            } else {
-                const timelines = await timeline_response.json()
-
-                timelines.map((content) => {
-                    document.getElementById('timeline').insertAdjacentHTML('beforeend', createContentStr(content.user.name, content.content, content.created_at))
-                })
-            }
-        }
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tutorial SNS</title>
+  <script src="/js/home.js"></script>
+  <script type="module" src="/js/home.module.js"></script>
 </head>
 
-<center>
-<div style="width: 40%;">
-<h1>Home</h1>
-<p id="display_name"></p>
-<input type="button" value="ログアウト" onclick="logout()" /><br/><br/>
-<div id="timeline">
-<textarea id="content" cols="40" rows="6" style="resize: none;" required></textarea>
-<br/><br/>
-<input type="button" value="投稿" onclick="submitContent()"/>
-<hr>
-</div>
-</div>
-</center>
+<body>
+  <div>
+    <h1>タイムライン</h1>
+    <p id="display_name"></p>
+    <input type="button" value="ログアウト" onclick="logout()" />
+    <div id="timeline">
+      <textarea id="content" cols="40" rows="6" style="resize: none;" required></textarea>
+      <div>
+        <input type="button" value="投稿" onclick="submitContent()" />
+      </div>
+      <hr>
+    </div>
+  </div>
+</body>
+
+</html>
